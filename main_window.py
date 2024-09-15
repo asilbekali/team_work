@@ -7,8 +7,8 @@ from team_project import *
 mydb = mysql.connector.connect(
     host = "localhost",
     user = "root",
-    password = "rustamjon1",
-    database = "blog_orginal"
+    password = "953901313",
+    database = "blog_post"
 )
 
 class MyWindow(QWidget):
