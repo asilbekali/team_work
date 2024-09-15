@@ -10,11 +10,11 @@ class GradientWidget(QWidget):
         self.original_color = QColor("brown")
         self.target_color = QColor("white")
         self.gradient = QLinearGradient(0, 0, 0, self.height())
-        self.gradient.setColorAt(0.0, QColor("#6a0dad"))
-        self.gradient.setColorAt(0.33, QColor("#1e90ff"))
-        self.gradient.setColorAt(0.66, QColor("#87ceeb"))
-        self.gradient.setColorAt(1.0, QColor("white"))
-
+        self.gradient.setColorAt(0.0, QColor("black"))
+        self.gradient.setColorAt(0.33, QColor("black"))   # Qora rang
+        self.gradient.setColorAt(0.33, QColor("#d4af37"))  # Gold (oltin rang)
+        self.gradient.setColorAt(0.66, QColor("#b8860b"))  # Qorong'i oltin
+        # self.gradient.setColorAt(1.0, QColor("white")) 
     def set_gradient(self, start_color, end_color):
         self.gradient.setColorAt(0, start_color)
         self.gradient.setColorAt(1, end_color)

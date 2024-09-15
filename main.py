@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QRect, QPropertyAnimation, QSequentialAnimationGroup
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtGui import *
 from tizm_kirish import Tizm
 from color_back import GradientWidget
 import mysql.connector
@@ -32,6 +32,7 @@ class MyWindow1(QWidget):
         h_main_text = QHBoxLayout()
         
         self.main_lbl = QLabel("Bosh sahifa")
+        self.main_lbl.setStyleSheet("color:black")
         self.pic_label = QLabel(self)
         self.pic_label.setFixedSize(300, 300)
         self.pic_label.setAlignment(Qt.AlignCenter)
@@ -46,7 +47,7 @@ class MyWindow1(QWidget):
             font-family: 'Comic Sans MS';
             font-size: 50px;
             font-weight: bold;
-            color: white;
+            color: black;
         """)
 
         btn_login = QPushButton("Hisobga kirish", clicked=self.login)
@@ -78,15 +79,28 @@ class MyWindow1(QWidget):
         super().resizeEvent(event)
 
     def button_style(self, btn):
-        """Apply style to buttons."""
-        btn.setStyleSheet("""
-            font-family: 'Comic Sans MS';
-            color: white;
-            background-color: #0099ff;
-            border: none;
-            font-size: 40px;
-            border-radius: 10px;
-        """)
+        btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        btn.setStyleSheet(
+            """
+            QPushButton {
+                background-color: white;
+                font-size: 40px;
+                border-radius: 30px;
+                color:#d4af37
+            }
+            QPushButton:hover {
+                background-color: #d4af37;
+                font-size: 60px;
+                border-radius: 30px;
+                color:black
+            }
+        """
+        
+            
+            
+            
+       
+        )
 
     def login(self):
         """Show login window."""
@@ -99,14 +113,14 @@ class MyWindow1(QWidget):
         
         self.animation_group = QSequentialAnimationGroup()
 
-        self.animation.setDuration(4000)
+        self.animation.setDuration(1000)
         self.animation.setStartValue(QRect(350, 50, 300, 300))
         self.animation.setEndValue(QRect(850, 50, 100, 100))
         self.animation.setLoopCount(1)
 
-        self.animation2.setDuration(4000)
+        self.animation2.setDuration(1000)
         self.animation2.setStartValue(QRect(50, 170, 300, 100))
-        self.animation2.setEndValue(QRect(500, 50, 300, 100))
+        self.animation2.setEndValue(QRect(500, 150, 300, 100))
         self.animation2.setLoopCount(1)
         
         self.animation_group.addAnimation(self.animation)
@@ -155,8 +169,8 @@ class MyWindow1(QWidget):
 
         self.ok_btn = QPushButton("OK", clicked=self.connetor)
         self.ext_btn = QPushButton("Exit", clicked=self.exit)
-        self.line_style(self.ok_btn)
-        self.line_style(self.ext_btn)
+        self.button_style2(self.ok_btn)
+        self.button_style2(self.ext_btn)
 
         self.ok_btn.setFixedSize(200, 50)
         self.ext_btn.setFixedSize(200, 50)
@@ -222,12 +236,13 @@ class MyWindow1(QWidget):
         cursor = mydb.cursor()
         cursor.execute("SELECT * FROM users WHERE number = %s OR user_name = %s", (telefon, user_name))
         myresult = cursor.fetchall()
+        print(myresult)
 
         if myresult:
             for i in myresult:
-                if telefon == i[1]:
+                if telefon == i[2]:
                     self.scs_lbl.setText("Bu telefon raqam bilan ro'yxatdan o'tilgan")
-                elif user_name == i[0]:
+                elif user_name == i[1]:
                     self.scs_lbl.setText("Bu username olingan")
                 self.scs_lbl.adjustSize()
             self.clear_inputs()
@@ -271,19 +286,38 @@ class MyWindow1(QWidget):
         self.ln_password_edit.clear()
 
     def line_style(self, ln):
+        ln.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
         ln.setStyleSheet("""
             font-family: 'Comic Sans MS';
             color: white;
-            background-color: #0099ff; 
+            background-color: transparent; 
             border: none;
             font-size: 30px;
             border-radius: 20px;
         """)
-
+    def button_style2(self, btn):
+        btn.setCursor(QCursor(Qt.CursorShape.PointingHandCursor))
+        btn.setStyleSheet(
+            """
+            QPushButton {
+                background-color: transparent;
+                font-size: 40px;
+                border-radius: 30px;
+                color:#d4af37
+            }
+            QPushButton:hover {
+                background-color: transparent;
+                font-size: 60px;
+                border-radius: 30px;
+                color:black
+            }
+        """)
     def main_page_switch(self):
         self.stacked_widget.setCurrentIndex(1)
 
     def exit(self):
+        self.clear_inputs()
+        self.scs_lbl.clear()
         self.stacked_widget.setCurrentIndex(0)
 
 
