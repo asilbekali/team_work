@@ -1,11 +1,13 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QProgressBar
 from PyQt5.QtCore import QTimer, Qt
 from PyQt5.QtGui import QPainter, QPixmap
+from PyQt5 import QtGui
 
 class MyWin(QWidget):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Qirg'i")
+        self.setWindowIcon(QtGui.QIcon("2.png"))
         self.setFixedSize(1920, 1000)
 
       
@@ -26,7 +28,7 @@ class MyWin(QWidget):
                 text-align: center;
             }
             QProgressBar::chunk {
-                background: #F4C542; 
+                background: #F4C543; 
                 width: 20px;
                 margin: 1.5px;
             }
