@@ -9,8 +9,8 @@ import mysql.connector
 mydb = mysql.connector.connect(
     host = "localhost",
     user = "root",
-    password = "953901313",
-    database = "blog_post"
+    password = "rustamjon1",
+    database = "blog_orginal"
 )
 print(mydb)
 
