@@ -1,13 +1,20 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QRect, QPropertyAnimation, QSequentialAnimationGroup
 from PyQt5.QtGui import *
-from tizm_kirish import Tizm
 from color_back import GradientWidget
+from PyQt5 import QtGui
+from PyQt5.QtCore import QTimer, Qt
 import mysql.connector
+from tizm_kirish import Tizm
+from eagle import MyWin
 
 class MyWindow1(QWidget):
     def __init__(self):
         super().__init__()
+
+        self.eagle = MyWin()
+        self.eagle.show()
+
         self.setFixedSize(1700, 900)
         self.stacked_widget = QStackedWidget()
         self.main_page_widget = QWidget()
@@ -19,59 +26,55 @@ class MyWindow1(QWidget):
         self.setup_animation()
         main_layout = QVBoxLayout()
         main_layout.addWidget(self.stacked_widget)
-        self.stacked_widget.addWidget(self.register_page)
-        
         self.setLayout(main_layout)
-       
+            
     def setup_main_page(self):
-        self.gradient_widget = GradientWidget(self)
-        self.gradient_widget.setGeometry(0, 0, 0, 0)
-        self.gradient_widget.setStyleSheet("background: transparent;")
+            self.gradient_widget = GradientWidget(self)
+            self.gradient_widget.setGeometry(0, 0, 0, 0)
+            self.gradient_widget.setStyleSheet("background: transparent;")
 
-        v_main_layout = QVBoxLayout()
-        h_main_text = QHBoxLayout()
-        
-        self.main_lbl = QLabel("Bosh sahifa")
-        self.main_lbl.setStyleSheet("color:black")
-        self.pic_label = QLabel(self)
-        self.pic_label.setFixedSize(300, 300)
-        self.pic_label.setAlignment(Qt.AlignCenter)
+            v_main_layout = QVBoxLayout()
+            h_main_text = QHBoxLayout()
+            
+            self.main_lbl = QLabel("Bosh sahifa")
+            self.main_lbl.setStyleSheet("color:black")
+            self.pic_label = QLabel(self)
+            self.pic_label.setFixedSize(300, 300)
+            self.pic_label.setAlignment(Qt.AlignCenter)
 
-        pixmap = QPixmap("write_logo.png")
-        scaled_pixmap = pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
-        self.pic_label.setPixmap(scaled_pixmap)
-        self.pic_label.setStyleSheet("background: transparent;")
-        
-        self.main_lbl.setAlignment(Qt.AlignCenter)
-        self.main_lbl.setStyleSheet("""
-            font-family: 'Comic Sans MS';
-            font-size: 50px;
-            font-weight: bold;
-            color: black;
-        """)
+            pixmap = QPixmap("write_logo.png")
+            scaled_pixmap = pixmap.scaled(self.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            self.pic_label.setPixmap(scaled_pixmap)
+            self.pic_label.setStyleSheet("background: transparent;")
+            
+            self.main_lbl.setAlignment(Qt.AlignCenter)
+            self.main_lbl.setStyleSheet("""
+                font-family: 'Comic Sans MS';
+                font-size: 50px;
+                font-weight: bold;
+                color: black;
+            """)
 
-        btn_login = QPushButton("Hisobga kirish", clicked=self.login)
-        btn_login.setFixedSize(600, 100)
+            btn_login = QPushButton("Hisobga kirish", clicked=self.login)
+            btn_login.setFixedSize(600, 100)
+            btn_register = QPushButton("Ro'yxatdan o'tish", clicked=self.main_page_switch)
+            btn_register.setFixedSize(600, 100)
+            self.button_style(btn_login)
+            self.button_style(btn_register)
 
-        btn_register = QPushButton("Ro'yxatdan o'tish", clicked=self.main_page_switch)
-        btn_register.setFixedSize(600, 100)
-        self.button_style(btn_login)
-        self.button_style(btn_register)
+            h_main_text.addWidget(self.main_lbl)
+            h_main_text.addWidget(self.pic_label)
+            h_main_text.addStretch()
 
-        h_main_text.addWidget(self.main_lbl)
-        h_main_text.addWidget(self.pic_label)
-        h_main_text.addStretch()
-
-        v_main_layout.addStretch()
-        v_main_layout.addLayout(h_main_text)
-        v_main_layout.addStretch()
-        v_main_layout.addWidget(btn_login, alignment=Qt.AlignCenter)
-        v_main_layout.addWidget(btn_register, alignment=Qt.AlignCenter)
-        v_main_layout.addStretch()
-        self.main_page_widget.setLayout(v_main_layout)
+            v_main_layout.addStretch()
+            v_main_layout.addLayout(h_main_text)
+            v_main_layout.addStretch()
+            v_main_layout.addWidget(btn_login, alignment=Qt.AlignCenter)
+            v_main_layout.addWidget(btn_register, alignment=Qt.AlignCenter)
+            v_main_layout.addStretch()
+            self.main_page_widget.setLayout(v_main_layout)
 
     def resizeEvent(self, event):
-        """Resize the pixmap to fit the label size."""
         pixmap = self.pic_label.pixmap()
         if pixmap:
             scaled_pixmap = pixmap.scaled(self.pic_label.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation)
@@ -103,7 +106,7 @@ class MyWindow1(QWidget):
         )
 
     def login(self):
-        """Show login window."""
+       
         self.log = Tizm()
         self.log.show()
 
@@ -133,7 +136,7 @@ class MyWindow1(QWidget):
         register_layout = QVBoxLayout(register_page)
         
         h_btn = QHBoxLayout()
-        main_lbl = QLabel("WORDPAD UCHUN RO'YXATDAN O'TISH")
+        main_lbl = QLabel("NOTEPAD UCHUN RO'YXATDAN O'TISH")
         main_lbl.setStyleSheet("font-size:50px;font-family: 'Comic Sans MS';color:white")
         main_lbl.setAlignment(Qt.AlignCenter)
 
@@ -202,19 +205,25 @@ class MyWindow1(QWidget):
         self.stacked_widget.addWidget(register_page)
     
     def connetor(self):
-        """Ma'lumotlarni ma'lumotlar bazasiga qo'shish."""
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
+<<<<<<< HEAD
+            password="rustamjon1",
+            database="note_pad"
+=======
             password="953901313",
             database="blog_post"
+>>>>>>> main
         )
+        cursor = mydb.cursor()
+
         user_name = self.ln_user_name.text().strip()
         ism = self.ln_ism_edit.text().strip()
         telefon = self.ln_phone_edit.text().strip()
         parol = self.ln_password_edit.text().strip()
 
-        telefon_operator = [90, 91, 88, 99, 93, 94,95,33,97,98,77]
+        telefon_operator = [90, 91, 88, 99, 93, 94, 95, 33, 97, 98, 77]
 
         if not user_name or not ism or not telefon or not parol:
             self.scs_lbl.setText("Iltimos, barcha maydonlarni to'ldiring!")
@@ -233,28 +242,30 @@ class MyWindow1(QWidget):
             self.scs_lbl.adjustSize()
             return
 
-        cursor = mydb.cursor()
         cursor.execute("SELECT * FROM users WHERE number = %s OR user_name = %s", (telefon, user_name))
         myresult = cursor.fetchall()
-        print(myresult)
 
         if myresult:
-            for i in myresult:
-                if telefon == i[2]:
+            for record in myresult:
+                if telefon == record[2]:
                     self.scs_lbl.setText("Bu telefon raqam bilan ro'yxatdan o'tilgan")
-                elif user_name == i[1]:
+                elif user_name == record[1]:
                     self.scs_lbl.setText("Bu username olingan")
                 self.scs_lbl.adjustSize()
             self.clear_inputs()
         else:
             if operator_code in telefon_operator:
-                cursor.execute("""
-                    INSERT INTO users(user_name, number, password, name)
-                    VALUES(%s, %s, %s, %s)
-                """, (user_name, telefon, parol, ism))
-                mydb.commit()
-                self.scs_lbl.setText("Siz muvaffaqiyatli ro'yxatdan o'tdingiz!")
-                self.scs_lbl.adjustSize()
+                try:
+                    cursor.execute("""
+                        INSERT INTO users (user_name, number, password, name)
+                        VALUES (%s, %s, %s, %s)
+                    """, (user_name, telefon, parol, ism))
+                    mydb.commit()
+                    self.scs_lbl.setText("Siz muvaffaqiyatli ro'yxatdan o'tdingiz!")
+                    self.scs_lbl.adjustSize()
+                except mysql.connector.Error as err:
+                    self.scs_lbl.setText(f"Xatolik yuz berdi: {err}")
+                    self.scs_lbl.adjustSize()
             else:
                 self.scs_lbl.setText("Telefon raqamining operator kodi noto'g'ri!")
                 self.scs_lbl.adjustSize()
@@ -313,7 +324,7 @@ class MyWindow1(QWidget):
             }
         """)
     def main_page_switch(self):
-        self.stacked_widget.setCurrentIndex(1)
+        self.stacked_widget.setCurrentIndex(2)
 
     def exit(self):
         self.clear_inputs()
@@ -326,3 +337,6 @@ if __name__ == "__main__":
     win = MyWindow1()
     win.show()
     app.exec_()
+
+
+#aaaaa

@@ -66,6 +66,6 @@ class Post(QWidget):
 
 if __name__ == "__main__":
     app = QApplication([])
-    win = Post()
+    win = Post('sasa')
     win.show()
     app.exec_()

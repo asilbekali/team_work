@@ -6,10 +6,9 @@ from PyQt5 import QtGui
 class MyWin(QWidget):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Qirg'i")
-        self.setWindowIcon(QtGui.QIcon("2.png"))
-        self.setFixedSize(1920, 1000)
-
+        self.setFixedSize(1700, 900)
+        self.ui()
+    def ui(self):
       
         self.background_pixmap = QPixmap("1.png")
 
@@ -40,9 +39,10 @@ class MyWin(QWidget):
         self.timer.start(5900)
 
     def update_progress(self):
-        self.hide()
+        self.close()
 
-    def paintEvent(self, event):
+
+    def paintEvent(self,event):
         painter = QPainter(self)
         scaled_pixmap = self.background_pixmap.scaled(self.size(), Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
         painter.drawPixmap(self.rect(), scaled_pixmap)
