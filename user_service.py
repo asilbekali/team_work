@@ -1,7 +1,7 @@
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt
-from duplicity.config import backup_name
+
 
 from color_back import GradientWidget
 import mysql.connector
@@ -10,8 +10,8 @@ import mysql.connector
 data_baza = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="Asilbek_2007",
-    database="user"
+    password="953901313",
+    database="blog_post"
 )
 
 class User_service(QWidget):

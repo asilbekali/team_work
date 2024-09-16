@@ -84,8 +84,8 @@ class MyWindow(QWidget):
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
-            password="rustamjon1",
-            database="blog_orginal"
+            password="953901313",
+            database="blog_post"
         )
         user_name = self.ln_user_name.text().strip()
         ism = self.ln_ism_edit.text().strip()
