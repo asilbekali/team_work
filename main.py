@@ -208,8 +208,13 @@ class MyWindow1(QWidget):
         mydb = mysql.connector.connect(
             host="localhost",
             user="root",
+<<<<<<< HEAD
             password="rustamjon1",
             database="note_pad"
+=======
+            password="953901313",
+            database="blog_post"
+>>>>>>> main
         )
         cursor = mydb.cursor()
 
