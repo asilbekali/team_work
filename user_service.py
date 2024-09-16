@@ -156,6 +156,7 @@ class Update_account(QWidget):
         self.btn_back.setFixedSize(450, 80)
         self.back.addWidget(self.btn_ok)
         self.back.addWidget(self.btn_back)
+        self.vb_box_main.addStretch()
         self.vb_box_main.addWidget(self.line_name_old, alignment=Qt.AlignCenter)
         self.vb_box_main.addWidget(self.line_name, alignment=Qt.AlignCenter)
         self.vb_box_main.addWidget(self.line_password, alignment=Qt.AlignCenter)
@@ -176,19 +177,29 @@ class Update_account(QWidget):
         new_name = self.line_name.text()
         new_password = self.line_password.text()
 
-        sql = """
-            UPDATE data 
-            SET user_name = %s, phone = %s 
-            WHERE user_name = %s
-        """
-        values = (new_name, new_password, old_name)
-        mycursor.execute(sql, values)
-        data_baza.commit()
+        check_user_sql = "SELECT user_name FROM data WHERE user_name = %s"
+        mycursor.execute(check_user_sql, (old_name,))
+        result = mycursor.fetchone()
 
-        QMessageBox.information(self, "Success", "User information updated successfully!")
-        self.line_password.clear()
-        self.line_name.clear()
-        self.line_name_old.clear()
+        if result:
+            update_sql = """
+                UPDATE data 
+                SET user_name = %s, password = %s 
+                WHERE user_name = %s
+            """
+            values = (new_name, new_password, old_name)
+            mycursor.execute(update_sql, values)
+            data_baza.commit()
+            QMessageBox.information(self, "Success", "User information updated successfully!")
+            self.line_password.clear()
+            self.line_name.clear()
+            self.line_name_old.clear()
+        else:
+            QMessageBox.warning(self, "Warning", "User not found in the database!")
+            self.line_password.clear()
+            self.line_name.clear()
+            self.line_name_old.clear()
+
 
 
 if __name__ == "__main__":
